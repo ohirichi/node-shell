@@ -19,13 +19,71 @@ const ls =file=>{
 }
 
 const echo = arg => {
-process.stdout.write(arg);
+  process.stdout.write(arg);
 }
 
-const cat = file =>{
-  
+const cat = file => {
+  fs.readFile("./" + file, 'utf8', (err, data) => {
+    if (err) throw err;
+    process.stdout.write(data);
+  })
 }
 
+const head = file => {
+  fs.readFile("./" + file, 'utf8', (err, data) => {
+    if (err) throw err;
+    const headData = data.split("\n", 5).join("\n");
+    process.stdout.write(headData);
+  })
+}
+
+const tail = file => {
+  fs.readFile("./" + file, 'utf8', (err, data) => {
+    if (err) throw err;
+    const tailDataArr = data.split("\n")
+    const tailData = tailDataArr.slice(tailDataArr.length - 5).join("\n");
+    process.stdout.write(tailData);
+  })
+}
+
+const sort = file => {
+  fs.readFile("./" + file, 'utf8', (err, data) => {
+    if (err) throw err;
+    data = data.split("\n").sort().join("\n");
+    process.stdout.write(data);
+  })
+}
+
+const wc = file => {
+  fs.readFile("./" + file, 'utf8', (err, data) => {
+    if (err) throw err;
+    data = data.split("\n");
+    process.stdout.write(data.length.toString());
+    process.stdout.write("\nprompt > ");
+  })
+}
+
+const uniq = file => {
+  fs.readFile("./" + file, 'utf8', (err, data) => {
+    if (err) throw err;
+    data = data.split("\n").sort();
+    uniqData = [];
+    for(var i = 0; i < data.length; i++){
+      if(!uniqData.includes(data[i])) uniqData.push(data[i]);
+    }
+    process.stdout.write(uniqData.join("\n"));
+  })
+  // const fileArr = sort(file).split("\n");
+  // fileArr.filter(line => {
+  //   const currentLine = fileArr[0];
+  //   const
+  // })
+  // const newArr = [fileArr[0]];
+  // for(var i = 1; i < fileArr.length; i++){
+  //   if(!newArr.contains(fileArr[i])) newArr.push(fileArr[i]);
+  // }
+  // process.stdout.write(newArr.join("\n"));
+}
 
 module.exports = {
   pwd,
@@ -34,5 +92,8 @@ module.exports = {
   echo,
   head,
   tail,
-  cat
+  cat, 
+  sort,
+  wc,
+  uniq
 }
