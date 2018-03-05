@@ -1,31 +1,33 @@
 const fs = require("fs");
+const request = require("request");
 
-const pwd =file=> process.stdout.write(process.cwd());
+const pwd =file=> done(process.cwd());
 
 
 const date =file=>{
   var dateString = new Date().toString();
-  process.stdout.write(dateString);
+  done(dateString);
 }
 
 const ls =file=>{
+  var output ="";
   fs.readdir('.', function(err, files) {
     if (err) throw err;
     files.forEach(function(file) {
-      process.stdout.write(file.toString() + "\n");
-    })
-  process.stdout.write("prompt > ");
+      output += file.toString() + "\n";
+      })
+      done(output);
   });
 }
 
 const echo = arg => {
-  process.stdout.write(arg);
+  done(arg);
 }
 
 const cat = file => {
   fs.readFile("./" + file, 'utf8', (err, data) => {
     if (err) throw err;
-    process.stdout.write(data);
+    done(data);
   })
 }
 
@@ -33,7 +35,7 @@ const head = file => {
   fs.readFile("./" + file, 'utf8', (err, data) => {
     if (err) throw err;
     const headData = data.split("\n", 5).join("\n");
-    process.stdout.write(headData);
+    done(headData);
   })
 }
 
@@ -42,7 +44,7 @@ const tail = file => {
     if (err) throw err;
     const tailDataArr = data.split("\n")
     const tailData = tailDataArr.slice(tailDataArr.length - 5).join("\n");
-    process.stdout.write(tailData);
+    done(tailData);
   })
 }
 
@@ -50,7 +52,7 @@ const sort = file => {
   fs.readFile("./" + file, 'utf8', (err, data) => {
     if (err) throw err;
     data = data.split("\n").sort().join("\n");
-    process.stdout.write(data);
+    done(data);
   })
 }
 
@@ -58,8 +60,8 @@ const wc = file => {
   fs.readFile("./" + file, 'utf8', (err, data) => {
     if (err) throw err;
     data = data.split("\n");
-    process.stdout.write(data.length.toString());
-    process.stdout.write("\nprompt > ");
+    done(data.length.toString());
+
   })
 }
 
@@ -71,7 +73,7 @@ const uniq = file => {
     for(var i = 0; i < data.length; i++){
       if(!uniqData.includes(data[i])) uniqData.push(data[i]);
     }
-    process.stdout.write(uniqData.join("\n"));
+    done(uniqData.join("\n"));
   })
   // const fileArr = sort(file).split("\n");
   // fileArr.filter(line => {
@@ -84,6 +86,18 @@ const uniq = file => {
   // }
   // process.stdout.write(newArr.join("\n"));
 }
+const curl = website=>{
+  request(website, function(error, response, body){
+    if(error) throw error;
+
+    done(body.toString());
+  })
+}
+
+const done = output => {
+  process.stdout.write(output);
+  process.stdout.write('\nprompt > ');
+}
 
 module.exports = {
   pwd,
@@ -92,8 +106,9 @@ module.exports = {
   echo,
   head,
   tail,
-  cat, 
+  cat,
   sort,
   wc,
-  uniq
+  uniq,
+  curl
 }

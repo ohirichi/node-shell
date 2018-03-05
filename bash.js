@@ -11,6 +11,6 @@ process.stdin.on('data', function (data) {
   var arg =  dataArr.slice(1).join(" ");
   command[cmd](arg);
 
-  process.stdout.write('\nprompt > ');
+  //process.stdout.write('\nprompt > ');
 
 });
